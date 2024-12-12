@@ -10,6 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Button from "@mui/material/Button";
 
 export default function Product() {
   const [list, setList] = useState([]);
@@ -55,6 +56,20 @@ export default function Product() {
             Welcome to my Store!
           </Typography>
         </Box>
+        <Box
+          sx={{
+            mx: "1px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant="h5" component="h5">
+            Products
+          </Typography>
+          <Button variant="contained" color="success">
+            Add New
+          </Button>
+        </Box>
         <Box>
           <div
             style={{
@@ -73,6 +88,8 @@ export default function Product() {
                 value={category}
                 onChange={handleChange}
               >
+                <MenuItem value="">All</MenuItem>
+
                 {categories.map((product) => (
                   <MenuItem value={product}>{product}</MenuItem>
                 ))}
