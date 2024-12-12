@@ -11,14 +11,10 @@ import Grid from "@mui/material/Grid2";
 export default function Productcard(props) {
   const { list } = props;
   return (
-    <Grid
-      container
-      rowSpacing={{ xs: 1, sm: 2, md: 3 }}
-      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-    >
+    <Grid container spacing={{ xs: 1, sm: 2, md: 3 }}>
       {" "}
       {list.map((product) => (
-        <Grid item size={4}>
+        <Grid item size={{ xs: 12, md: 6, lg: 4 }}>
           <Card sx={{ minWidth: 175, borderRadius: "5px" }}>
             <CardContent>
               <Box>
