@@ -1,7 +1,10 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getProducts, getCategories } from "../../utils/api";
 import Productcard from "../../components/Card";
+import Header from "../../components/Header";
+//MUI
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -11,8 +14,10 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
+import { ArrowRight, ArrowLeft } from "@mui/icons-material";
 
 export default function Product() {
+  const [page, setPage] = useState(1);
   const [list, setList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
@@ -29,33 +34,24 @@ export default function Product() {
   // hook into page load
   useEffect(() => {
     // only load the  data when page is loaded first time
-    getProducts(category).then((listData) => {
+    getProducts(category, page).then((listData) => {
       // when data is returned from API, set it to the list state
       setList(listData);
       console.log(listData);
     });
-  }, [category]); // empty dependency means it will trigger only once when page is loaded
+  }, [category, page]); // empty dependency means it will trigger only once when page is loaded
 
   const handleChange = (event) => {
     setCategory(event.target.value);
+    setPage(1);
     console.log(event.target.value);
   };
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="xl">
-        <Box
-          sx={{
-            m: "10px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Typography variant="h3" component="h3">
-            Welcome to my Store!
-          </Typography>
-        </Box>
+      <Container>
+        <Header />
         <Box
           sx={{
             mx: "1px",
@@ -66,7 +62,12 @@ export default function Product() {
           <Typography variant="h5" component="h5">
             Products
           </Typography>
-          <Button variant="contained" color="success">
+          <Button
+            LinkComponent={Link}
+            to="/products/new"
+            variant="contained"
+            color="success"
+          >
             Add New
           </Button>
         </Box>
@@ -99,7 +100,35 @@ export default function Product() {
         </Box>
         <Box>
           {" "}
-          <Productcard list={list} />
+          <Productcard
+            page={page}
+            category={category}
+            list={list}
+            setList={setList}
+          />
+        </Box>
+        <Box
+          display={"flex"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          sx={{
+            padding: "40px 0",
+          }}
+        >
+          {" "}
+          <Button
+            disabled={page === 1 ? true : false}
+            variant="contained"
+            onClick={() => setPage(page - 1)}
+          >
+            <ArrowLeft />
+            Prev
+          </Button>
+          <span>Page {page}</span>
+          <Button variant="contained" onClick={() => setPage(page + 1)}>
+            Next
+            <ArrowRight />
+          </Button>
         </Box>
       </Container>
     </React.Fragment>
