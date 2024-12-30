@@ -14,6 +14,7 @@ import { toast } from "sonner";
 export default function Productcard(props) {
   const { list, setList, page, category } = props;
 
+  //delete item
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?"
@@ -33,6 +34,7 @@ export default function Productcard(props) {
     }
   };
 
+  //TODO add this to a seperate cart.api file
   const addToCartHandler = async (item) => {
     const stringProducts = localStorage.getItem("cart");
     let cart = JSON.parse(stringProducts);
@@ -45,16 +47,14 @@ export default function Productcard(props) {
       return item._id === product._id;
     });
 
+    //if exists, add to quantity count by 1
     if (newProduct) {
       newProduct.quantity += 1;
+      //if not, add the product
     } else {
       cart.push({
-        _id: item._id,
-        name: item.name,
-        price: item.price,
+        ...item,
         quantity: 1,
-        description: item.description,
-        category: item.category,
       });
     }
     localStorage.setItem("cart", JSON.stringify(cart));

@@ -1,5 +1,6 @@
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //mui
 import { Box, Container } from "@mui/material";
@@ -16,8 +17,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 function Cart() {
   const navigate = useNavigate();
 
+  //get item from localstore
   const stringProducts = localStorage.getItem("cart");
+  //pass data
   let cart = JSON.parse(stringProducts);
+  //if not item found set empty arr
   if (!cart) {
     cart = [];
   }
@@ -27,6 +31,7 @@ function Cart() {
     return total + cart.price * cart.quantity;
   }, 0);
 
+  //TODO move this to own cart.api file
   const handleCartDelete = (_id) => {
     // 1. remove the selected cart item from cart items based on the cart item_id
     let filteredCart = cart.filter((item) => item._id !== _id);
@@ -81,17 +86,6 @@ function Cart() {
                         </Button>
                       </TableCell>
                     </TableRow>
-                    <TableRow>
-                      <TableCell
-                        colSpan={4}
-                        align="right"
-                        sx={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${totalPrice.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
                   </>
                 ))
               ) : (
@@ -101,11 +95,34 @@ function Cart() {
                   </TableCell>
                 </TableRow>
               )}
+
+              {/* Total price row */}
+              {cart.length > 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    ${totalPrice.toFixed(2)}
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
         <Box sx={{ display: "flex", justifyContent: "end" }}>
-          <Button variant="contained">Checkout</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            component={Link}
+            to="/checkout"
+            sx={{ textTransform: "none" }}
+            disabled={cart.length === 0 ? true : false}
+          >
+            Checkout
+          </Button>
         </Box>
       </Container>
     </>

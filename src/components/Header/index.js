@@ -55,6 +55,16 @@ export default function Header() {
           >
             Cart
           </Button>
+
+          <Button
+            variant={location.pathname === "/orders" ? "contained" : "outlined"}
+            color="primary"
+            LinkComponent={Link}
+            to="/orders"
+            sx={{ margin: "0 8px" }}
+          >
+            My Orders
+          </Button>
         </Box>
       </Box>
     </>
