@@ -37,20 +37,14 @@ function Orders() {
     getOrders();
   }, []);
 
-  const handleUpdate = async (_id, newStatus) => {
-    try {
-      const updatedOrder = await updateOrder(_id, newStatus);
-      if (updatedOrder) {
-        // Update the order in the state with the new status
-        setOrders((oldOrders) =>
-          oldOrders.map((order) =>
-            order._id === _id ? { ...order, status: newStatus } : order
-          )
-        );
-        toast.success("status updated");
-      }
-    } catch (error) {
-      toast.error("Failed to update status");
+  const handleUpdate = async (_id, status) => {
+    const updatedOrder = await updateOrder(_id, status);
+    if (updatedOrder) {
+      // fetch the updated orders from API
+      const updatedOrders = await getAllOrders();
+      setOrders(updatedOrders);
+
+      toast.success("Order status has been updated");
     }
   };
 
@@ -112,22 +106,19 @@ function Orders() {
                   <TableCell align="right">
                     <Box sx={{ minWidth: 120 }}>
                       <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Status
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={order.status}
-                          label="Status"
-                          onChange={(e) =>
-                            handleChange(order._id, e.target.value)
-                          }
-                        >
-                          <MenuItem value={"pending"}>Pending</MenuItem>
-                          <MenuItem value={"paid"}>Paid</MenuItem>
-                          <MenuItem value={"failed"}>Failed</MenuItem>
-                        </Select>
+                        {order.status === "pending" ? (
+                          "Pending"
+                        ) : (
+                          <Select
+                            value={order.status}
+                            onChange={(event) => {
+                              handleUpdate(order._id, event.target.value);
+                            }}
+                          >
+                            <MenuItem value="paid">Paid</MenuItem>
+                            <MenuItem value="failed">Failed</MenuItem>
+                          </Select>
+                        )}
                       </FormControl>
                     </Box>
                   </TableCell>
