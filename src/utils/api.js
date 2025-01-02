@@ -1,10 +1,10 @@
 import axios from "axios";
 import { toast } from "sonner";
+import { API_URL } from "../constants";
 
 //PRODUCTS
 
 // static data
-const API_URL = "http://localhost:5555";
 export const getProducts = async (category = "", page = 1) => {
   try {
     const response = await axios.get(

@@ -65,6 +65,26 @@ export default function Header() {
           >
             My Orders
           </Button>
+
+          <Button
+            variant={location.pathname === "/login" ? "contained" : "outlined"}
+            color="primary"
+            LinkComponent={Link}
+            to="/login"
+            sx={{ margin: "0 8px" }}
+          >
+            LOGIN
+          </Button>
+
+          <Button
+            variant={location.pathname === "/signup" ? "contained" : "outlined"}
+            color="primary"
+            LinkComponent={Link}
+            to="/signup"
+            sx={{ margin: "0 8px" }}
+          >
+            SIGN UP
+          </Button>
         </Box>
       </Box>
     </>
