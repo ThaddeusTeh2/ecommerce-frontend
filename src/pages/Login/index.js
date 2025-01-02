@@ -1,6 +1,6 @@
 import React from "react";
-import { useState } from "react";
 import { login } from "../../utils/api_login";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Header";
@@ -38,9 +38,9 @@ export default function Login() {
     }
   };
   return (
-    <>
+    <Container>
       <Header />
-      <Container>
+      <Container maxWidth="sm">
         <Card>
           <Box
             sx={{
@@ -70,14 +70,7 @@ export default function Login() {
                 />
               </Box>
             </CardContent>
-            <CardActions
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                textAlign: "center",
-                margin: "0 auto",
-              }}
-            >
+            <CardActions>
               <Button
                 fullWidth
                 variant="contained"
@@ -90,6 +83,6 @@ export default function Login() {
           </Box>
         </Card>
       </Container>
-    </>
+    </Container>
   );
 }

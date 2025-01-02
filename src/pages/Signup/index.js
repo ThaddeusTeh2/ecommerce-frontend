@@ -44,9 +44,9 @@ export default function Signup() {
   };
 
   return (
-    <>
+    <Container>
       <Header />
-      <Container>
+      <Container maxWidth="sm">
         <Card>
           <Box
             sx={{
@@ -100,13 +100,18 @@ export default function Signup() {
                 margin: "0 auto",
               }}
             >
-              <Button fullWidth variant="contained" onClick={handleSignup}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleSignup}
+                disabled={!name || !email || !password || !confirmPassword}
+              >
                 Signup
               </Button>
             </CardActions>
           </Box>
         </Card>
       </Container>
-    </>
+    </Container>
   );
 }
