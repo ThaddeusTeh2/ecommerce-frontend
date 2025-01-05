@@ -1,11 +1,22 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { isUserLoggedIn } from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
 
 export default function Header() {
   const location = useLocation();
+  const [cookies, setCookie, removeCookie] = useCookies(["currentUser"]);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // clear the cookies
+    removeCookie("currentUser");
+    // redirect the user back to login page
+    navigate("/login");
+  };
 
   // Determine if the current route matches the target path
   const isActive = (path) => location.pathname === path;
@@ -65,26 +76,49 @@ export default function Header() {
           >
             My Orders
           </Button>
-
-          <Button
-            variant={location.pathname === "/login" ? "contained" : "outlined"}
-            color="primary"
-            LinkComponent={Link}
-            to="/login"
-            sx={{ margin: "0 8px" }}
-          >
-            LOGIN
-          </Button>
-
-          <Button
-            variant={location.pathname === "/signup" ? "contained" : "outlined"}
-            color="primary"
-            LinkComponent={Link}
-            to="/signup"
-            sx={{ margin: "0 8px" }}
-          >
-            SIGN UP
-          </Button>
+          {isUserLoggedIn(cookies) ? (
+            <Button
+              variant={"outlined"}
+              color="primary"
+              sx={{
+                margin: "0 8px",
+              }}
+              onClick={() => {
+                handleLogout();
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant={
+                  location.pathname === "/login" ? "contained" : "outlined"
+                }
+                color="primary"
+                LinkComponent={Link}
+                to="/login"
+                sx={{
+                  margin: "0 8px",
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                variant={
+                  location.pathname === "/signup" ? "contained" : "outlined"
+                }
+                color="primary"
+                LinkComponent={Link}
+                to="/signup"
+                sx={{
+                  margin: "0 8px",
+                }}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
         </Box>
       </Box>
     </>

@@ -1,6 +1,11 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getProducts, deleteProduct } from "../../utils/api";
+import { isAdmin, isUserLoggedIn } from "../../utils/api_auth";
+import { toast } from "sonner";
+import { useCookies } from "react-cookie";
+
+//MUI
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -9,10 +14,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid2";
-import { toast } from "sonner";
 
 export default function Productcard(props) {
+  const navigate = useNavigate();
   const { list, setList, page, category } = props;
+  const [cookies] = useCookies(["currentUser"]);
 
   //delete item
   const handleDelete = async (id) => {
@@ -122,25 +128,36 @@ export default function Productcard(props) {
                   justifyContent: "space-between",
                 }}
               >
-                <Button
-                  variant="outlined"
-                  LinkComponent={Link}
-                  to={`/products/${product._id}/edit`}
-                  color="primary"
-                  size="small"
-                  sx={{ textTransform: "none", marginRight: "8px" }}
-                >
-                  EDIT
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  size="small"
-                  sx={{ textTransform: "none" }}
-                  onClick={() => handleDelete(product._id)}
-                >
-                  DELETE
-                </Button>
+                {isAdmin(cookies) ? (
+                  <Box
+                    display={"flex"}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    sx={{
+                      marginLeft: "0px !important",
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      LinkComponent={Link}
+                      to={`/products/${product._id}/edit`}
+                      color="primary"
+                      size="small"
+                      sx={{ textTransform: "none", marginRight: "8px" }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                      sx={{ textTransform: "none" }}
+                      onClick={() => handleDelete(product._id)}
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                ) : null}
               </CardActions>
             </Card>
           </Grid>

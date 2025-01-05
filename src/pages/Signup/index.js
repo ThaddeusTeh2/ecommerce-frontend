@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../../utils/api_signup";
+import { signup } from "../../utils/api_auth";
 import Header from "../../components/Header";
+import { useCookies } from "react-cookie";
+
 import {
   Box,
   Card,
@@ -17,6 +19,7 @@ import { toast } from "sonner";
 
 export default function Signup() {
   //set default values 4 state
+  const [cookies, setCookie] = useCookies(["currentUser"]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +36,12 @@ export default function Signup() {
       navigate("/signup");
     } else {
       const userCreate = await signup(name, email, password);
+      console.log(userCreate);
+
+      // set cookies
+      setCookie("currentUser", userCreate, {
+        maxAge: 60 * 60 * 24 * 30, // second * minutes * hours * days
+      });
 
       //show notif upon successful signup
       if (userCreate) {
@@ -70,6 +79,7 @@ export default function Signup() {
               <Box mb={2}>
                 <TextField
                   label="Email"
+                  type="email"
                   required
                   onChange={(event) => setEmail(event.target.value)}
                   fullWidth
@@ -78,6 +88,7 @@ export default function Signup() {
               <Box mb={2}>
                 <TextField
                   label="Password"
+                  type="password"
                   required
                   onChange={(event) => setPassword(event.target.value)}
                   fullWidth
@@ -86,6 +97,7 @@ export default function Signup() {
               <Box mb={2}>
                 <TextField
                   label="Confirm Password"
+                  type="password"
                   required
                   onChange={(event) => setConfirmPassword(event.target.value)}
                   fullWidth

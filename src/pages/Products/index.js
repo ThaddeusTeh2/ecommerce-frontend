@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { getProducts, getCategories } from "../../utils/api";
 import Productcard from "../../components/Card";
 import Header from "../../components/Header";
+
 //MUI
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
