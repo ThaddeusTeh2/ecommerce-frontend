@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 import { getAllOrders, deleteOrder, updateOrder } from "../../utils/api";
 import { toast } from "sonner";
 
+//token
+import { getUserToken } from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
+
 //MUI
 import { Container } from "@mui/material";
 import Table from "@mui/material/Table";
@@ -21,13 +25,15 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 function Orders() {
+  const [cookies] = useCookies(["currentUser"]);
+  const token = getUserToken(cookies);
   const [status, setStatus] = useState("");
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const getOrders = async () => {
       try {
-        const data = await getAllOrders();
+        const data = await getAllOrders(token);
         setOrders(data);
         console.log(data);
       } catch (error) {
@@ -38,10 +44,10 @@ function Orders() {
   }, []);
 
   const handleUpdate = async (_id, status) => {
-    const updatedOrder = await updateOrder(_id, status);
+    const updatedOrder = await updateOrder(_id, status, token);
     if (updatedOrder) {
       // fetch the updated orders from API
-      const updatedOrders = await getAllOrders();
+      const updatedOrders = await getAllOrders(token);
       setOrders(updatedOrders);
 
       toast.success("Order status has been updated");
@@ -54,10 +60,10 @@ function Orders() {
       "Are you sure you want to delete this product?"
     );
     if (confirmed) {
-      const deleted = await deleteOrder(id);
+      const deleted = await deleteOrder(id, token);
       if (deleted) {
         // get the latest orders data from the API again
-        const latestOrders = await getAllOrders();
+        const latestOrders = await getAllOrders(token);
         // update the orders state with the latest data
         setOrders(latestOrders);
         // show success message

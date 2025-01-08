@@ -5,6 +5,9 @@ import { isAdmin, isUserLoggedIn } from "../../utils/api_auth";
 import { toast } from "sonner";
 import { useCookies } from "react-cookie";
 
+//token
+import { getUserToken } from "../../utils/api_auth";
+
 //MUI
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -19,6 +22,7 @@ export default function Productcard(props) {
   const navigate = useNavigate();
   const { list, setList, page, category } = props;
   const [cookies] = useCookies(["currentUser"]);
+  const token = getUserToken(cookies);
 
   //delete item
   const handleDelete = async (id) => {
@@ -26,7 +30,7 @@ export default function Productcard(props) {
       "Are you sure you want to delete this product?"
     );
     if (confirmed) {
-      const deleted = await deleteProduct(id);
+      const deleted = await deleteProduct(id, token);
       if (deleted) {
         // get the latest products data from the API again
         const latestProducts = await getProducts(category, page);

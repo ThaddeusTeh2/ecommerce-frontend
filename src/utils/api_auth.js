@@ -43,3 +43,9 @@ export const isAdmin = (cookies) => {
   const currentUser = getCurrentUser(cookies);
   return currentUser && currentUser.role;
 };
+
+// function to access cookies.currentUser.token
+export const getUserToken = (cookies) => {
+  const currentUser = getCurrentUser(cookies);
+  return currentUser && currentUser.token ? currentUser.token : "";
+};

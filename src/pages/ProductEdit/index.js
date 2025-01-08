@@ -1,17 +1,27 @@
-import { Container, Typography, TextField, Box, Button } from "@mui/material";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import { toast } from "sonner";
 import { editProduct, getProduct } from "../../utils/api";
+
+//token
+import { getUserToken } from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
+
+//mui
+import { Container, Typography, TextField, Box, Button } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 function ProductEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [cookies] = useCookies(["currentUser"]);
+  const token = getUserToken(cookies);
+
+  //states
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -40,7 +50,8 @@ function ProductEdit() {
         name,
         description,
         price,
-        category
+        category,
+        token
       );
 
       if (updatedProduct) {

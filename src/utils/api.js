@@ -4,7 +4,7 @@ import { API_URL } from "../constants";
 
 //PRODUCTS
 
-// static data
+// get all products (public)
 export const getProducts = async (category = "", page = 1) => {
   try {
     const response = await axios.get(
@@ -16,7 +16,7 @@ export const getProducts = async (category = "", page = 1) => {
   }
 };
 
-// get 1 product
+// get 1 product (public)
 export const getProduct = async (_id) => {
   try {
     const response = await axios.get(API_URL + "/products/" + _id);
@@ -26,40 +26,73 @@ export const getProduct = async (_id) => {
   }
 };
 
-// add new product
-export const addNewProduct = async (name, description, price, category) => {
+// add new product (admin)
+export const addNewProduct = async (
+  name,
+  description,
+  price,
+  category,
+  token
+) => {
   try {
-    const response = await axios.post(API_URL + "/products", {
-      name: name,
-      description: description,
-      price: price,
-      category: category,
-    });
+    const response = await axios.post(
+      API_URL + "/products",
+      {
+        name: name,
+        description: description,
+        price: price,
+        category: category,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     toast.error(error.response.data.error);
   }
 };
 
-// update product
-export const editProduct = async (_id, name, description, price, category) => {
+// update product (admin)
+export const editProduct = async (
+  _id,
+  name,
+  description,
+  price,
+  category,
+  token
+) => {
   try {
-    const response = await axios.put(API_URL + "/products/" + _id, {
-      name: name,
-      description: description,
-      price: price,
-      category: category,
-    });
+    const response = await axios.put(
+      API_URL + "/products/" + _id,
+      {
+        name: name,
+        description: description,
+        price: price,
+        category: category,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     toast.error(error.response.data.error);
   }
 };
 
-// delete product
-export const deleteProduct = async (_id) => {
+// delete product (admin)
+export const deleteProduct = async (_id, token) => {
   try {
-    const response = await axios.delete(API_URL + `/products/${_id}`);
+    const response = await axios.delete(API_URL + `/products/${_id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.data;
   } catch (error) {
     toast.error(error.response.data.error);
@@ -146,23 +179,78 @@ export function getTotalCartPrice() {
 
 //ORDERS
 
+// ORDERS tokened
+//get all orders
+export const getAllOrders = async (token) => {
+  try {
+    const response = await axios.get(API_URL + "/orders", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data.error);
+  }
+};
+
 //create order
 export const createOrder = async (
   customerName,
   customerEmail,
   products,
-  totalPrice
+  totalPrice,
+  token
 ) => {
   try {
-    const response = await axios.post(API_URL + "/orders", {
-      customerName,
-      customerEmail,
-      products,
-      totalPrice,
-    });
+    const response = await axios.post(
+      API_URL + "/orders",
+      {
+        customerName,
+        customerEmail,
+        products,
+        totalPrice,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     toast.error(error.message);
+  }
+};
+//update
+export const updateOrder = async (_id, status, token) => {
+  try {
+    const response = await axios.put(
+      API_URL + `/orders/${_id}`,
+      { status },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data.error);
+  }
+};
+
+//delete order
+export const deleteOrder = async (_id, token) => {
+  try {
+    const response = await axios.delete(API_URL + `/orders/${_id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -191,34 +279,3 @@ export const verifyPayment = async (
 export function clearCart() {
   localStorage.removeItem("cart");
 }
-
-// ORDERS
-//get all orders
-export const getAllOrders = async (_id) => {
-  try {
-    const response = await axios.get(API_URL + "/orders");
-    return response.data;
-  } catch (error) {
-    toast.error(error.response.data.error);
-  }
-};
-
-//update
-export const updateOrder = async (_id, status) => {
-  try {
-    const response = await axios.put(API_URL + `/orders/${_id}`, { status });
-    return response.data;
-  } catch (error) {
-    toast.error(error.response.data.error);
-  }
-};
-
-//delete order
-export const deleteOrder = async (_id) => {
-  try {
-    const response = await axios.delete(API_URL + `/orders/${_id}`);
-    return response.data;
-  } catch (error) {
-    toast.error(error.response.data.error);
-  }
-};

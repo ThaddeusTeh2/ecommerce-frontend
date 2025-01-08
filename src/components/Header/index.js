@@ -21,6 +21,9 @@ export default function Header() {
   // Determine if the current route matches the target path
   const isActive = (path) => location.pathname === path;
 
+  const currentUser = cookies.currentUser;
+  const userName = currentUser?.name;
+
   return (
     <>
       <Box
@@ -37,7 +40,9 @@ export default function Header() {
             fontWeight: "bold",
           }}
         >
-          Welcome To My Store
+          {isUserLoggedIn(cookies)
+            ? `Welcome, ${userName || "User"}`
+            : "Welcome To My Store"}
         </Typography>
         <Box
           sx={{

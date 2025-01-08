@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Typography, Box, TextField, Button } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import { toast } from "sonner";
 import { addNewProduct } from "../../utils/api";
 
+//token
+import { getUserToken } from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
+
+//mui
+import { Container, Typography, Box, TextField, Button } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+
 function ProductAddNew() {
   const navigate = useNavigate();
+  const [cookies] = useCookies(["currentUser"]);
+  const token = getUserToken(cookies);
+
+  //states
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -25,7 +35,8 @@ function ProductAddNew() {
       name,
       description,
       price,
-      category
+      category,
+      token
     );
 
     // check if the newProductData exists or not
