@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { addNewProduct } from "../../utils/api";
+import ButtonUpload from "../../components/ButtonUpload";
 
 //token
-import { getUserToken } from "../../utils/api_auth";
+import { getUserToken, isAdmin } from "../../utils/api_auth";
 import { useCookies } from "react-cookie";
 
 //mui
@@ -22,6 +23,13 @@ function ProductAddNew() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
+
+  // check if is admin or not
+  useEffect(() => {
+    if (!isAdmin(cookies)) {
+      navigate("/login");
+    }
+  }, [cookies, navigate]);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -89,6 +97,13 @@ function ProductAddNew() {
               fullWidth
               value={category}
               onChange={(event) => setCategory(event.target.value)}
+            />
+          </Box>
+          <Box mb={2}>
+            <ButtonUpload
+              onFileUpload={(files) => {
+                console.log(files);
+              }}
             />
           </Box>
           <Button

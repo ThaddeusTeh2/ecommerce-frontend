@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { editProduct, getProduct } from "../../utils/api";
 
 //token
-import { getUserToken } from "../../utils/api_auth";
+import { getUserToken, isAdmin } from "../../utils/api_auth";
 import { useCookies } from "react-cookie";
 
 //mui
@@ -27,6 +27,12 @@ function ProductEdit() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
+
+  useEffect(() => {
+    if (!isAdmin(cookies)) {
+      navigate("/login");
+    }
+  }, [cookies, navigate]);
 
   useEffect(() => {
     getProduct(id).then((productData) => {

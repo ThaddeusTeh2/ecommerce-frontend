@@ -22,16 +22,37 @@ import TableRow from "@mui/material/TableRow";
 import Table from "@mui/material/Table";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import {
+  getUserToken,
+  getCurrentUser,
+  isUserLoggedIn,
+} from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
 
 function Checkout() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [cookies] = useCookies(["currentUser"]);
+  const token = getUserToken(cookies);
+  const currentUser = getCurrentUser(cookies);
+
+  const [name, setName] = useState(
+    currentUser && currentUser.name ? currentUser.name : ""
+  );
+  const [email, setEmail] = useState(
+    currentUser && currentUser.email ? currentUser.email : ""
+  );
   const [loading, setLoading] = useState(false);
 
   const cart = getCart();
   const totalPrice = getTotalCartPrice();
+
+  //check if user logged in, else redir
+  useEffect(() => {
+    if (!isUserLoggedIn(cookies)) {
+      navigate("/login");
+    }
+  }, [cookies, navigate]);
 
   const doCheckout = async () => {
     // 1. make sure the name and email fields are filled
@@ -44,7 +65,7 @@ function Checkout() {
       // show loader
       setLoading(true);
       // 2. trigger the createOrder function
-      const response = await createOrder(name, email, cart, totalPrice);
+      const response = await createOrder(name, email, cart, totalPrice, token);
 
       // 3. get the billplz url
       const billplz_url = response.billplz_url;
@@ -80,8 +101,10 @@ function Checkout() {
                 label="Email"
                 required
                 fullWidth
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                value={
+                  currentUser && currentUser.email ? currentUser.email : ""
+                }
+                disabled={true}
               />
             </Box>
 

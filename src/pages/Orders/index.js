@@ -4,7 +4,7 @@ import { getAllOrders, deleteOrder, updateOrder } from "../../utils/api";
 import { toast } from "sonner";
 
 //token
-import { getUserToken } from "../../utils/api_auth";
+import { getUserToken, isAdmin } from "../../utils/api_auth";
 import { useCookies } from "react-cookie";
 
 //MUI
@@ -17,7 +17,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -93,7 +92,7 @@ function Orders() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.length > 0 ? (
+            {orders && orders.length > 0 ? (
               orders.map((order) => (
                 <TableRow>
                   {/* customer name */}
@@ -112,18 +111,25 @@ function Orders() {
                   <TableCell align="right">
                     <Box sx={{ minWidth: 120 }}>
                       <FormControl fullWidth>
-                        {order.status === "pending" ? (
-                          "Pending"
+                        {isAdmin(cookies) ? (
+                          order.status === "pending" ? (
+                            <Select value={order.status} disabled={true}>
+                              <MenuItem value="pending">Pending</MenuItem>
+                            </Select>
+                          ) : (
+                            <Select
+                              value={order.status}
+                              onChange={(event) => {
+                                handleUpdate(order._id, event.target.value);
+                              }}
+                            >
+                              <MenuItem value="paid">Paid</MenuItem>
+                              <MenuItem value="failed">Failed</MenuItem>
+                              <MenuItem value="completed">Completed</MenuItem>
+                            </Select>
+                          )
                         ) : (
-                          <Select
-                            value={order.status}
-                            onChange={(event) => {
-                              handleUpdate(order._id, event.target.value);
-                            }}
-                          >
-                            <MenuItem value="paid">Paid</MenuItem>
-                            <MenuItem value="failed">Failed</MenuItem>
-                          </Select>
+                          order.status
                         )}
                       </FormControl>
                     </Box>
@@ -132,20 +138,24 @@ function Orders() {
                   <TableCell>${order.totalPrice}</TableCell>
                   {/* paid at */}
                   <TableCell align="right">{order.paid_at}</TableCell>
-                  <TableCell align="right">
-                    {order.status === "pending" ? (
-                      <Button
-                        variant="contained"
-                        color="error"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => handleDelete(order._id)}
-                      >
-                        Remove
-                      </Button>
+                  <TableCell>
+                    {isAdmin(cookies) ? (
+                      order.status === "pending" ? (
+                        <Button
+                          variant="contained"
+                          color="error"
+                          disabled={order.status !== "pending"}
+                          onClick={() => {
+                            handleDelete(order._id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      ) : (
+                        "no"
+                      )
                     ) : (
-                      <Button variant="contained" color="error" disabled>
-                        X
-                      </Button>
+                      "no"
                     )}
                   </TableCell>
                 </TableRow>

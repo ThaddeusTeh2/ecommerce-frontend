@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { isUserLoggedIn } from "../../utils/api_auth";
 import { useCookies } from "react-cookie";
+import { clearCart } from "../../utils/api";
 
 export default function Header() {
   const location = useLocation();
@@ -14,6 +15,8 @@ export default function Header() {
   const handleLogout = () => {
     // clear the cookies
     removeCookie("currentUser");
+    //clear cart
+    clearCart();
     // redirect the user back to login page
     navigate("/login");
   };

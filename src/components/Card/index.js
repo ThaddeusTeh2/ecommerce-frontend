@@ -134,10 +134,10 @@ export default function Productcard(props) {
               >
                 {isAdmin(cookies) ? (
                   <Box
-                    display={"flex"}
-                    justifyContent={"space-between"}
-                    alignItems={"center"}
                     sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                       marginLeft: "0px !important",
                     }}
                   >
