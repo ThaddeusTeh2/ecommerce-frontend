@@ -8,9 +8,10 @@ import PaymentVerify from "./pages/PaymentVerify";
 import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import CategoryEdit from "./pages/CategoryEdit";
+import Categories from "./pages/Categories";
 import { Toaster } from "sonner";
 import { CookiesProvider } from "react-cookie";
+import CategoryEdit from "./pages/CategoryEdit";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
             <Route path="/orders" element={<Orders />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/categories" element={<CategoryEdit />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/categories/:id/edit" element={<CategoryEdit />} />
           </Routes>
         </BrowserRouter>
         <Toaster expand={true} richColors position="top-right" />

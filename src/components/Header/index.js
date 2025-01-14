@@ -43,90 +43,108 @@ export default function Header() {
             fontWeight: "bold",
           }}
         >
-          {isUserLoggedIn(cookies)
-            ? `Welcome, ${userName || "User"}`
-            : "Welcome To My Store"}
+          {isUserLoggedIn(cookies) ? `Welcome To My Store` : "Welcome, Guest"}
         </Typography>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
             padding: "16px",
             borderBottom: "1px solid #000",
           }}
         >
-          <Button
-            component={Link}
-            to="/"
-            variant={isActive("/") ? "contained" : "outlined"}
-            color="primary"
-            sx={{ margin: "0 8px" }}
-          >
-            home
-          </Button>
-          <Button
-            component={Link}
-            to="/cart"
-            variant={isActive("/cart") ? "contained" : "outlined"}
-            color="primary"
-            sx={{ margin: "0 8px" }}
-          >
-            Cart
-          </Button>
-
-          <Button
-            variant={location.pathname === "/orders" ? "contained" : "outlined"}
-            color="primary"
-            LinkComponent={Link}
-            to="/orders"
-            sx={{ margin: "0 8px" }}
-          >
-            My Orders
-          </Button>
-          {isUserLoggedIn(cookies) ? (
+          <Box>
             <Button
-              variant={"outlined"}
+              component={Link}
+              to="/"
+              variant={isActive("/") ? "contained" : "outlined"}
               color="primary"
-              sx={{
-                margin: "0 8px",
-              }}
-              onClick={() => {
-                handleLogout();
-              }}
+              sx={{ margin: "0 8px" }}
             >
-              Logout
+              home
             </Button>
-          ) : (
-            <>
-              <Button
-                variant={
-                  location.pathname === "/login" ? "contained" : "outlined"
-                }
-                color="primary"
-                LinkComponent={Link}
-                to="/login"
-                sx={{
-                  margin: "0 8px",
-                }}
-              >
-                Login
-              </Button>
-              <Button
-                variant={
-                  location.pathname === "/signup" ? "contained" : "outlined"
-                }
-                color="primary"
-                LinkComponent={Link}
-                to="/signup"
-                sx={{
-                  margin: "0 8px",
-                }}
-              >
-                Sign Up
-              </Button>
-            </>
-          )}
+            <Button
+              component={Link}
+              to="/cart"
+              variant={isActive("/cart") ? "contained" : "outlined"}
+              color="primary"
+              sx={{ margin: "0 8px" }}
+            >
+              Cart
+            </Button>
+
+            <Button
+              variant={
+                location.pathname === "/orders" ? "contained" : "outlined"
+              }
+              color="primary"
+              LinkComponent={Link}
+              to="/orders"
+              sx={{ margin: "0 8px" }}
+            >
+              My Orders
+            </Button>
+            <Button
+              variant={
+                location.pathname === "/categories" ? "contained" : "outlined"
+              }
+              color="primary"
+              LinkComponent={Link}
+              to="/categories"
+              sx={{ margin: "0 8px" }}
+            >
+              Categories
+            </Button>
+          </Box>
+          <Box align="right">
+            {isUserLoggedIn(cookies) ? (
+              <Box display={"flex"}>
+                <Typography>Current User: {userName}</Typography>
+                <Button
+                  variant={"outlined"}
+                  color="error"
+                  sx={{
+                    margin: "0 8px",
+                  }}
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </Button>
+              </Box>
+            ) : (
+              <>
+                <Button
+                  variant={
+                    location.pathname === "/login" ? "contained" : "outlined"
+                  }
+                  color="primary"
+                  LinkComponent={Link}
+                  to="/login"
+                  sx={{
+                    margin: "0 8px",
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant={
+                    location.pathname === "/signup" ? "contained" : "outlined"
+                  }
+                  color="primary"
+                  LinkComponent={Link}
+                  to="/signup"
+                  sx={{
+                    margin: "0 8px",
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </>
+            )}
+          </Box>
         </Box>
       </Box>
     </>

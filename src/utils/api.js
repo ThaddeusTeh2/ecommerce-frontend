@@ -144,7 +144,7 @@ export const addNewCategory = async (name, token) => {
 };
 
 //update category
-export const updateCategory = async (_id, name, token) => {
+export const editCategory = async (_id, name, token) => {
   try {
     const response = await axios.put(
       API_URL + "/categories/" + _id,

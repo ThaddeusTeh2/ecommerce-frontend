@@ -28,7 +28,7 @@ export default function Productcard(props) {
   const token = getUserToken(cookies);
 
   //delete item
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, token) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?"
     );

@@ -1,84 +1,102 @@
 import Header from "../../components/Header";
-import {
-  getCategories,
-  addNewCategory,
-  updateCategory,
-  deleteCategory,
-} from "../../utils/api";
+import { getUserToken, isAdmin } from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { editCategory, getCategory } from "../../utils/api";
 
 //mui
 import { Container, Typography, Box, TextField, Button } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Grid from "@mui/material/Grid2";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function CategoryEdit() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [cookies] = useCookies(["currentUser"]);
+  const token = getUserToken(cookies);
+
+  //states
+  const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState("");
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    if (!isAdmin(cookies)) {
+      navigate("/login");
+    }
+  }, [cookies, navigate]);
+
+  useEffect(() => {
+    getCategory(id).then((data) => {
+      setLoading(false);
+      setCategory(data.category);
+      setName(data.name);
+      console.log(data);
+    });
+  }, [id]);
+
+  //update category handler
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+
+    if (!name) {
+      toast.error("put something la");
+    } else {
+      // trigger the API
+      const updatedCategory = await editCategory(id, name, token);
+
+      if (updatedCategory) {
+        toast.success("category has been edited");
+        navigate("/categories");
+      }
+    }
+  };
+
   return (
     <>
       <Header />
       <Container>
-        {/* input */}
-        <Box>
-          {/* title */}
-          <Box mb={2}>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-              }}
-            >
-              Categories
+        <Card>
+          <CardContent>
+            <Typography variant="h4" align="center" mb={4}>
+              Edit Category
             </Typography>
-          </Box>
-          <Box>
-            <Grid container>
-              <Grid size={11} px={1}>
-                <TextField type="text" label="Category" required fullWidth />
-              </Grid>
-              <Grid size={1}>
+            {loading ? (
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <CircularProgress color="inherit" />
+              </Box>
+            ) : (
+              <>
+                <Box mb={2}>
+                  <TextField
+                    label="Name"
+                    required
+                    fullWidth
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </Box>
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   color="primary"
-                  sx={{
-                    height: 55,
-                  }}
+                  fullWidth
+                  onClick={handleUpdate}
                 >
-                  Add
+                  Update
                 </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        {/* mapped category data */}
-        <Box>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>name</TableCell>
-                <TableCell align="right">actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell>Placeholder</TableCell>
-                <TableCell align="right">
-                  <Box>
-                    <Button variant="contained" sx={{ marginRight: "10px" }}>
-                      Edit
-                    </Button>
-                    <Button variant="contained" color="error">
-                      Delete
-                    </Button>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Box>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </Container>
     </>
   );

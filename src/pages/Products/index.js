@@ -34,7 +34,7 @@ export default function Product() {
 
   // hook into page load
   useEffect(() => {
-    // only load the  data when page is loaded first time
+    // only load the data when page is loaded first time
     getProducts(category, page).then((listData) => {
       // when data is returned from API, set it to the list state
       setList(listData);
