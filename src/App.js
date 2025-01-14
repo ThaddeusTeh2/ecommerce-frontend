@@ -8,6 +8,7 @@ import PaymentVerify from "./pages/PaymentVerify";
 import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import CategoryEdit from "./pages/CategoryEdit";
 import { Toaster } from "sonner";
 import { CookiesProvider } from "react-cookie";
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/orders" element={<Orders />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/categories" element={<CategoryEdit />} />
           </Routes>
         </BrowserRouter>
         <Toaster expand={true} richColors position="top-right" />

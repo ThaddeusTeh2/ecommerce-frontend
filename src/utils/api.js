@@ -32,6 +32,7 @@ export const addNewProduct = async (
   description,
   price,
   category,
+  image,
   token
 ) => {
   try {
@@ -42,6 +43,7 @@ export const addNewProduct = async (
         description: description,
         price: price,
         category: category,
+        image: image,
       },
       {
         headers: {
@@ -100,12 +102,79 @@ export const deleteProduct = async (_id, token) => {
 };
 
 //CATEGORY
+
+//get all categories
 export const getCategories = async () => {
   try {
     const response = await axios.get(API_URL + "/categories"); // http://localhost:5555/categories
     return response.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+//get 1 category
+export const getCategory = async (_id) => {
+  try {
+    const response = await axios.get(API_URL + "/categories/" + _id);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data.error);
+  }
+};
+
+//add category
+export const addNewCategory = async (name, token) => {
+  try {
+    const response = await axios.post(
+      API_URL + "/categories",
+      {
+        name: name,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data.error);
+  }
+};
+
+//update category
+export const updateCategory = async (_id, name, token) => {
+  try {
+    const response = await axios.put(
+      API_URL + "/categories/" + _id,
+      {
+        _id,
+        name,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data.error);
+  }
+};
+
+//delete category
+export const deleteCategory = async (_id, token) => {
+  try {
+    const response = await axios.delete(API_URL + `/categories/${_id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data.error);
   }
 };
 

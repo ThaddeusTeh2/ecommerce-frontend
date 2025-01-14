@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { editProduct, getProduct } from "../../utils/api";
+import { editProduct, getProduct, getCategories } from "../../utils/api";
 
 //token
 import { getUserToken, isAdmin } from "../../utils/api_auth";
@@ -14,6 +14,10 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 function ProductEdit() {
   const { id } = useParams();
@@ -27,6 +31,7 @@ function ProductEdit() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     if (!isAdmin(cookies)) {
@@ -42,7 +47,20 @@ function ProductEdit() {
       setPrice(productData.price);
       setCategory(productData.category);
     });
-  }, []);
+  }, [id]);
+
+  //category use effect
+  useEffect(() => {
+    getCategories().then((data) => {
+      setCategories(data);
+    });
+  }, []); // only when page first loaded
+
+  const handleChange = (event) => {
+    setCategory(event.target.value);
+
+    console.log(event.target.value);
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -113,13 +131,25 @@ function ProductEdit() {
                   />
                 </Box>
                 <Box mb={2}>
-                  <TextField
-                    label="Category"
-                    required
-                    fullWidth
-                    value={category}
-                    onChange={(event) => setCategory(event.target.value)}
-                  />
+                  <FormControl variant="filled" style={{ minWidth: 220 }}>
+                    <InputLabel id="demo-simple-select-filled-label">
+                      Filter By Category
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="demo-simple-select-filled"
+                      value={category}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="">All</MenuItem>
+
+                      {categories.map((category) => (
+                        <MenuItem value={category._id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Box>
                 <Button
                   variant="contained"

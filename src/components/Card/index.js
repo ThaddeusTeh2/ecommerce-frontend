@@ -4,6 +4,7 @@ import { getProducts, deleteProduct } from "../../utils/api";
 import { isAdmin, isUserLoggedIn } from "../../utils/api_auth";
 import { toast } from "sonner";
 import { useCookies } from "react-cookie";
+import { API_URL } from "../../constants";
 
 //token
 import { getUserToken } from "../../utils/api_auth";
@@ -12,6 +13,8 @@ import { getUserToken } from "../../utils/api_auth";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -71,13 +74,35 @@ export default function Productcard(props) {
     toast.success(`${item.name} added.`);
   };
 
+  console.log(list);
   return (
     <Grid container spacing={{ xs: 1, sm: 2, md: 3 }}>
       {" "}
       {list.length > 0 ? (
         list.map((product) => (
           <Grid item size={{ xs: 12, md: 6, lg: 4 }}>
-            <Card sx={{ minWidth: 175, borderRadius: "5px" }}>
+            <Card
+              sx={{
+                minWidth: 175,
+                borderRadius: "5px",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "300px",
+                  overflow: "hidden",
+                }}
+              >
+                {product.image ? (
+                  <CardMedia
+                    component="img"
+                    image={`${API_URL}/${product.image}`}
+                    sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                ) : null}
+              </div>
+
               <CardContent>
                 <Box>
                   <Typography>
@@ -97,7 +122,11 @@ export default function Productcard(props) {
                     sx={{ backgroundColor: "lightgreen" }}
                   />
                   <Chip
-                    label={product.category}
+                    label={
+                      product.category && product.category.name
+                        ? product.category.name
+                        : ""
+                    }
                     sx={{ backgroundColor: "lightpink" }}
                   />
                 </Box>

@@ -92,8 +92,8 @@ export default function Product() {
               >
                 <MenuItem value="">All</MenuItem>
 
-                {categories.map((product) => (
-                  <MenuItem value={product}>{product}</MenuItem>
+                {categories.map((category) => (
+                  <MenuItem value={category._id}>{category.name}</MenuItem>
                 ))}
               </Select>
             </FormControl>
