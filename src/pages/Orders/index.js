@@ -21,12 +21,10 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 function Orders() {
   const [cookies] = useCookies(["currentUser"]);
   const token = getUserToken(cookies);
-  const [status, setStatus] = useState("");
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -42,7 +40,7 @@ function Orders() {
     getOrders();
   }, []);
 
-  const handleUpdate = async (_id, status) => {
+  const handleUpdate = async (_id, status, token) => {
     const updatedOrder = await updateOrder(_id, status, token);
     if (updatedOrder) {
       // fetch the updated orders from API

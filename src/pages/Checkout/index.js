@@ -30,7 +30,6 @@ import {
 import { useCookies } from "react-cookie";
 
 function Checkout() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const [cookies] = useCookies(["currentUser"]);
   const token = getUserToken(cookies);

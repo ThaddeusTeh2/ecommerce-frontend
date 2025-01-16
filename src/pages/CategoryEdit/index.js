@@ -11,7 +11,6 @@ import { editCategory, getCategory } from "../../utils/api";
 import { Container, Typography, Box, TextField, Button } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function CategoryEdit() {
@@ -27,7 +26,7 @@ export default function CategoryEdit() {
 
   useEffect(() => {
     if (!isAdmin(cookies)) {
-      navigate("/login");
+      navigate("/");
     }
   }, [cookies, navigate]);
 

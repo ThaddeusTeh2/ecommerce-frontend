@@ -9,7 +9,7 @@ import { clearCart } from "../../utils/api";
 
 export default function Header() {
   const location = useLocation();
-  const [cookies, setCookie, removeCookie] = useCookies(["currentUser"]);
+  const [cookies, removeCookie] = useCookies(["currentUser"]);
   const navigate = useNavigate();
 
   const handleLogout = () => {

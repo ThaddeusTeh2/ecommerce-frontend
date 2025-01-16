@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProducts, deleteProduct } from "../../utils/api";
-import { isAdmin, isUserLoggedIn } from "../../utils/api_auth";
+import { isAdmin } from "../../utils/api_auth";
 import { toast } from "sonner";
 import { useCookies } from "react-cookie";
 import { API_URL } from "../../constants";
@@ -22,10 +22,8 @@ import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid2";
 
 export default function Productcard(props) {
-  const navigate = useNavigate();
   const { list, setList, page, category } = props;
   const [cookies] = useCookies(["currentUser"]);
-  const token = getUserToken(cookies);
 
   //delete item
   const handleDelete = async (id, token) => {
